@@ -1,9 +1,3 @@
-// Check URL Hash for Login with Webex Token
-parseJwtFromURLHash();
-
-// Initialize the Webex application
-const app = new window.Webex.Application();
-
 app.onReady().then(async () => {
   log("onReady()", { message: "host app is ready" });
 
@@ -26,26 +20,26 @@ app.onReady().then(async () => {
     );
     app.on("space:infoChanged", (payload) => log("space:infoChanged", payload));
   });
-  
 
   // Implement the message counter within the Webex sidebar
   try {
-    // Get the unread message count from the Redux store
     const unreadCount = Object.values(
       store.getState()?.roomsPageReducer?.unreadInboxRooms || {}
     ).reduce((a, c) => a + c, 0);
+    console.log("Unread message count:", unreadCount);  // Debugging line
 
     // Access the Webex sidebar
     const webexSidebar = await app.context.getSidebar();
     if (!webexSidebar) {
-      console.error("Sidebar not found.");
-    } else {
-      console.log("Sidebar loaded successfully", webexSidebar);
+      console.error("Sidebar is not available.");
+      return;
     }
+
+    console.log("Sidebar loaded successfully");
 
     // Set the unread message counter badge
     const res = await webexSidebar.showBadge({
-      badgeType: "count",
+      badgeType: "count",  // Ensure the badgeType is correct
       count: unreadCount,
     });
     console.log("Badge Response:", res);
@@ -56,101 +50,10 @@ app.onReady().then(async () => {
         type: "set_unread_message_counter",
         unreadCount,
       });
+    } else {
+      console.log("No service worker available.");
     }
   } catch (e) {
-    console.error(`Setting unread message badge counter failed: ${e.message}`);
+    console.error("Setting unread message badge counter failed:", e);
   }
 });
-
-/**
- * Sets the share URL to the value entered in the "shareUrl" element.
- */
-function handleSetShare() {
-  if (app.isShared) {
-    log("ERROR: setShareUrl() should not be called while session is active");
-    return;
-  }
-  const url = document.getElementById("shareUrl").value;
-  app
-    .setShareUrl(url, url, "Embedded App Kitchen Sink")
-    .then(() => {
-      log("setShareUrl()", {
-        message: "shared URL to participants panel",
-        url: url,
-      });
-    })
-    .catch((error) => {
-      log(
-        "setShareUrl() failed with error",
-        Webex.Application.ErrorCodes[error]
-      );
-    });
-}
-
-/**
- * Clears the share URL.
- */
-function handleClearShare() {
-  app
-    .clearShareUrl()
-    .then(() => {
-      log("clearShareUrl()", { message: "share URL has been cleared" });
-    })
-    .catch((error) => {
-      log(
-        "clearShareUrl() failed with error",
-        Webex.Application.ErrorCodes[error]
-      );
-    });
-}
-
-/**
- * Sets the presentation URL.
- */
-async function handleSetPresentationUrl() {
-  if (app.isShared) {
-    log("ERROR: setShareUrl() should not be called while session is active");
-    return;
-  }
-  const url = document.getElementById("shareUrl").value;
-  const meeting = await app.context.getMeeting();
-  meeting
-    .setPresentationUrl(
-      url,
-      "My Presentation",
-      Webex.Application.ShareOptimizationMode.AUTO_DETECT,
-      false
-    )
-    .then(() => {
-      log("setPresentationUrl()", {
-        message: "presented URL to participants panel",
-        url: url,
-      });
-    })
-    .catch((error) => {
-      log(
-        "setPresentationUrl() failed with error",
-        Webex.Application.ErrorCodes[error]
-      );
-    });
-}
-
-/**
- * Clears the set presentation URL.
- */
-async function handleClearPresentationUrl() {
-  const meeting = await app.context.getMeeting();
-  meeting
-    .clearPresentationUrl()
-    .then(() => {
-      log("clearPresentationUrl()", {
-        message: "cleared URL to participants panel",
-      });
-    })
-    .catch((error) => {
-      log(
-        "clearPresentationUrl() failed with error",
-        Webex.Application.ErrorCodes[error]
-      );
-    });
-}
