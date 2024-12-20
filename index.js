@@ -26,6 +26,7 @@ app.onReady().then(async () => {
     );
     app.on("space:infoChanged", (payload) => log("space:infoChanged", payload));
   });
+  
 
   // Implement the message counter within the Webex sidebar
   try {
@@ -36,7 +37,11 @@ app.onReady().then(async () => {
 
     // Access the Webex sidebar
     const webexSidebar = await app.context.getSidebar();
-    console.log("Webex Sidebar:", webexSidebar);
+    if (!webexSidebar) {
+      console.error("Sidebar not found.");
+    } else {
+      console.log("Sidebar loaded successfully", webexSidebar);
+    }
 
     // Set the unread message counter badge
     const res = await webexSidebar.showBadge({
