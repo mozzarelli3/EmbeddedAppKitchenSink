@@ -3,7 +3,7 @@ parseJwtFromURLHash();
 
 const app = new window.Webex.Application();
 
-app.onReady().then(() => {
+app.onReady().then(async () => {
   log("onReady()", { message: "host app is ready" });
 
   // Listen and emit any events from the EmbeddedAppSDK
@@ -25,6 +25,21 @@ app.onReady().then(() => {
     );
     app.on("space:infoChanged", (payload) => log("space:infoChanged", payload));
   });
+
+// Webex sidebar implementation
+try {
+  const webexSidebar = await app.context.getSidebar();
+  console.log(webexSidebar);
+  const unreadCount = Object.values(
+    store.getState()?.roomsPageReducer?.unreadInboxRooms || {}
+  ).reduce((a, c) => a + c, 0);
+  const res = await webexSidebar.showBadge({ badgeType: "count", count: unreadCount });
+  console.log(res);
+} catch (e) {
+  console.error(
+    `Setting unread message badge counter failed, ${e.message}`
+  );
+}
 });
 
 /**
