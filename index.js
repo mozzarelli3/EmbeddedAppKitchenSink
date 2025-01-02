@@ -27,7 +27,8 @@ app.onReady().then(async () => {
         store.getState()?.roomsPageReducer?.unreadInboxRooms || {},
       ).reduce((a, c) => a + c, 0);
   
-      const count = unreadMsgCount ?? unreadCount;
+      const count = 5;
+      // const count = unreadMsgCount ?? unreadCount;
       
       if (isNaN(count) || count < 0) {
         console.error("Invalid count value:", count);
