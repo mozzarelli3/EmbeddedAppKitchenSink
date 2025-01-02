@@ -28,6 +28,11 @@ app.onReady().then(async () => {
       ).reduce((a, c) => a + c, 0);
   
       const count = unreadMsgCount ?? unreadCount;
+      
+      if (isNaN(count) || count < 0) {
+        console.error("Invalid count value:", count);
+        return;
+      }
   
       if ("serviceWorker" in navigator) {
         return navigator?.serviceWorker?.controller?.postMessage({
