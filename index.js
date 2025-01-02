@@ -47,6 +47,18 @@ app.onReady().then(async () => {
       );
     }
   }
+
+  webexApplication.onReady().then(async () => {
+    console.log("Webex app is ready.");
+  
+    try {
+      // Call setUnreadMsgCounterBadge when the app is ready
+      await setUnreadMsgCounterBadge();
+    } catch (error) {
+      console.error("Error invoking setUnreadMsgCounterBadge:", error);
+    }
+  });
+
 });
 
 
