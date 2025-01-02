@@ -21,12 +21,13 @@ app.onReady().then(async () => {
     app.on("space:infoChanged", (payload) => log("space:infoChanged", payload));
   });
 
- const setUnreadMsgCounterBadge = async (unreadMsgCount) => {
-    try {
-      const unreadCount = Object.values(
-        store.getState()?.roomsPageReducer?.unreadInboxRooms || {},
-      ).reduce((a, c) => a + c, 0);
-  
+//  const setUnreadMsgCounterBadge = async (unreadMsgCount) => {
+//     try {
+//       const unreadCount = Object.values(
+//         store.getState()?.roomsPageReducer?.unreadInboxRooms || {},
+//       ).reduce((a, c) => a + c, 0);
+const setUnreadMsgCounterBadge = async () => {
+  try {  
       const count = 5;
       // const count = unreadMsgCount ?? unreadCount;
       
