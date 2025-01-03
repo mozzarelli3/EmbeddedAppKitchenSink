@@ -80,6 +80,47 @@ function handleGetSpace() {
 /**
  * Handles a new message event and updates the sidebar message counter
  */
+
+const setUnreadMsgCounterBadge = async () => {
+  try {  
+      const count = 5;
+      // const count = unreadMsgCount ?? unreadCount;
+      
+      if (isNaN(count) || count < 0) {
+        console.error("Invalid count value:", count);
+        return;
+      }
+  
+      if ("serviceWorker" in navigator) {
+        return navigator?.serviceWorker?.controller?.postMessage({
+          type: "set_unread_message_counter",
+          unreadCount: count,
+        });
+      }
+  
+      const webexSidebar = await webexApplication.context.getSidebar();
+      console.log(webexSidebar);
+  
+      const res = await webexSidebar.showBadge({ badgeType: "count", count });
+      console.log(res);
+    } catch (e) {
+      console.error(
+        `Setting unread message badge counter failed, ${(e).message}`,
+      );
+    }
+  }
+
+  webexApplication.onReady().then(async () => {
+    console.log("Webex app is ready.");
+  
+    try {
+      // Call setUnreadMsgCounterBadge when the app is ready
+      await setUnreadMsgCounterBadge();
+    } catch (error) {
+      console.error("Error invoking setUnreadMsgCounterBadge:", error);
+    }
+  });
+
 function handleNewMessage() {
   app.context
     .getSpace()

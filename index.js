@@ -22,53 +22,13 @@ app.onReady().then(async () => {
         log("space:infoChanged", payload)
       );
     });
+  });
   
   //  const setUnreadMsgCounterBadge = async (unreadMsgCount) => {
   //     try {
   //       const unreadCount = Object.values(
   //         store.getState()?.roomsPageReducer?.unreadInboxRooms || {},
   //       ).reduce((a, c) => a + c, 0);
-  const setUnreadMsgCounterBadge = async () => {
-    try {  
-        const count = 5;
-        // const count = unreadMsgCount ?? unreadCount;
-        
-        if (isNaN(count) || count < 0) {
-          console.error("Invalid count value:", count);
-          return;
-        }
-    
-        if ("serviceWorker" in navigator) {
-          return navigator?.serviceWorker?.controller?.postMessage({
-            type: "set_unread_message_counter",
-            unreadCount: count,
-          });
-        }
-    
-        const webexSidebar = await webexApplication.context.getSidebar();
-        console.log(webexSidebar);
-    
-        const res = await webexSidebar.showBadge({ badgeType: "count", count });
-        console.log(res);
-      } catch (e) {
-        console.error(
-          `Setting unread message badge counter failed, ${(e).message}`,
-        );
-      }
-    }
-  
-    webexApplication.onReady().then(async () => {
-      console.log("Webex app is ready.");
-    
-      try {
-        // Call setUnreadMsgCounterBadge when the app is ready
-        await setUnreadMsgCounterBadge();
-      } catch (error) {
-        console.error("Error invoking setUnreadMsgCounterBadge:", error);
-      }
-    });
-  
-  });
 
 
 
