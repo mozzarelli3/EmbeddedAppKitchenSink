@@ -10,3 +10,7 @@
   height: 300px;
   overflow: scroll;
 }
+
+* {
+  background: pink;
+}
