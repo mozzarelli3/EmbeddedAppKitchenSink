@@ -32,7 +32,7 @@ app.onReady().then(async () => {
       await webex.messages.listen();
       webex.messages.on("created", async (message) => {
         console.log("New message detected:", message);
-        await updateMessageCounter(); // Update counter on new messages
+        handleNewMessage(message);
       });
     } catch (error) {
       console.error("Error listening to messages:", error);
