@@ -78,24 +78,46 @@ function handleGetSpace() {
 }
 
 /**
- * Handles a new mwessage event and updates the sidebar message counter
+ * Handles a new message event and updates the sidebar message counter
  */
-function handleNewMessage(message) {
-  // Log the new message event
-  log("New Message Event", message);
+function handleNewMessage() {
+  app.context
+    .getSpace()
+    .then((space) => {
+      log("getSpace()", space);
 
-  try {
-    // Simulate updating the message counter
-    const unreadMessagesCount = (window.unreadMessagesCount || 0) + 1;
-    window.unreadMessagesCount = unreadMessagesCount;
+      // Simulate fetching new messages for the current space
+      const spaceId = space.id; // Get the current space ID
+      const simulatedMessage = {
+        id: `msg-${Date.now()}`, // Simulated unique message ID
+        spaceId: spaceId,
+        text: "This is a test message",
+        created: new Date().toISOString(),
+      };
 
-    // Update the badge with the new count
-    setUnreadMsgCounterBadge(unreadMessagesCount);
-    log("Updated Message Counter", { unreadMessagesCount });
-  } catch (error) {
-    log("Error Handling New Message", { error: error.message });
-  }
+      // Log the new message event
+      log("New Message Event", simulatedMessage);
+
+      // Update the counter
+      try {
+        const unreadMessagesCount = (window.unreadMessagesCount || 0) + 1;
+        window.unreadMessagesCount = unreadMessagesCount;
+
+        // Update the badge with the new count
+        setUnreadMsgCounterBadge(unreadMessagesCount);
+        log("Updated Message Counter", { unreadMessagesCount });
+      } catch (error) {
+        log("Error Handling New Message", { error: error.message });
+      }
+    })
+    .catch((error) => {
+      log(
+        "getSpace() promise failed with error",
+        Webex.Application.ErrorCodes[error]
+      );
+    });
 }
+
 
 /**
  * Initiates the System Browser OAuth flow for SSO
