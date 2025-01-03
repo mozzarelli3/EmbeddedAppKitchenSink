@@ -23,4 +23,18 @@ app.onReady().then(() => {
     );
     app.on("space:infoChanged", (payload) => log("space:infoChanged", payload));
   });
+
+    // Listen for new messages
+    const listenToMessages = async () => {
+      try {
+        await webex.messages.listen();
+        webex.messages.on("created", async (message) => {
+          console.log("New message detected:", message);
+          handleNewMessage(message);
+        });
+      } catch (error) {
+        console.error("Error listening to messages:", error);
+      }
+    };
 });
+
