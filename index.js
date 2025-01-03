@@ -1,185 +1,74 @@
-let unreadMessagesCount = 0; // Track the count globally or in a shared state
-
-function handleNewMessage() {
-  app.context
-    .getSpace()
-    .then((space) => {
-      const simulatedMessage = {
-        id: `msg-${Date.now()}`,
-        spaceId: space.id,
-        text: "This is a test message",
-        created: new Date().toISOString(),
-      };
-
-      log("New Message Event", simulatedMessage);
-
-      try {
-        // Increment the message counter
-        unreadMessagesCount += 1;
-
-        // Update the badge with the new count
-        setUnreadMsgCounterBadge(unreadMessagesCount);
-        log("Updated Message Counter", { unreadMessagesCount });
-      } catch (error) {
-        log("Error Handling New Message", { error: error.message });
-      }
-    })
-    .catch((error) => {
-      log(
-        "getSpace() promise failed with error",
-        Webex.Application.ErrorCodes[error]
-      );
-    });
-}
-
-
-// Function to handle a new message
-function handleNewMessage() {
-  app.context
-    .getSpace()
-    .then((space) => {
-      const simulatedMessage = {
-        id: `msg-${Date.now()}`,
-        spaceId: space.id,
-        text: "This is a test message",
-        created: new Date().toISOString(),
-      };
-
-      log("New Message Event", simulatedMessage);
-
-      try {
-        const unreadMessagesCount = (window.unreadMessagesCount || 0) + 1;
-        window.unreadMessagesCount = unreadMessagesCount;
-
-        // Call setUnreadMsgCounterBadge
-        setUnreadMsgCounterBadge(unreadMessagesCount);
-        log("Updated Message Counter", { unreadMessagesCount });
-      } catch (error) {
-        log("Error Handling New Message", { error: error.message });
-      }
-    })
-    .catch((error) => {
-      log(
-        "getSpace() promise failed with error",
-        Webex.Application.ErrorCodes[error]
-      );
-    });
-}
-
-// app.onReady() function
 app.onReady().then(async () => {
-  log("onReady()", { message: "host app is ready" });
-
-  // Listen and emit any events from the EmbeddedAppSDK
-  app.listen().then(() => {
-    app.on("application:displayContextChanged", (payload) =>
-      log("application:displayContextChanged", payload)
-    );
-    app.on("application:shareStateChanged", (payload) =>
-      log("application:shareStateChanged", payload)
-    );
-    app.on("application:themeChanged", (payload) =>
-      log("application:themeChanged", payload)
-    );
-    app.on("meeting:infoChanged", (payload) =>
-      log("meeting:infoChanged", payload)
-    );
-    app.on("meeting:roleChanged", (payload) =>
-      log("meeting:roleChanged", payload)
-    );
-    app.on("space:infoChanged", (payload) =>
-      log("space:infoChanged", payload)
-    );
-  });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.onReady().then(async () => {
-  //   log("onReady()", { message: "host app is ready" });
+    log("onReady()", { message: "host app is ready" });
   
-  //   // Listen and emit any events from the EmbeddedAppSDK
-  //   app.listen().then(() => {
-  //     app.on("application:displayContextChanged", (payload) =>
-  //       log("application:displayContextChanged", payload)
-  //     );
-  //     app.on("application:shareStateChanged", (payload) =>
-  //       log("application:shareStateChanged", payload)
-  //     );
-  //     app.on("application:themeChanged", (payload) =>
-  //       log("application:themeChanged", payload)
-  //     );
-  //     app.on("meeting:infoChanged", (payload) =>
-  //       log("meeting:infoChanged", payload)
-  //     );
-  //     app.on("meeting:roleChanged", (payload) =>
-  //       log("meeting:roleChanged", payload)
-  //     );
-  //     app.on("space:infoChanged", (payload) =>
-  //       log("space:infoChanged", payload)
-  //     );
-  //   });
+    // Listen and emit any events from the EmbeddedAppSDK
+    app.listen().then(() => {
+      app.on("application:displayContextChanged", (payload) =>
+        log("application:displayContextChanged", payload)
+      );
+      app.on("application:shareStateChanged", (payload) =>
+        log("application:shareStateChanged", payload)
+      );
+      app.on("application:themeChanged", (payload) =>
+        log("application:themeChanged", payload)
+      );
+      app.on("meeting:infoChanged", (payload) =>
+        log("meeting:infoChanged", payload)
+      );
+      app.on("meeting:roleChanged", (payload) =>
+        log("meeting:roleChanged", payload)
+      );
+      app.on("space:infoChanged", (payload) =>
+        log("space:infoChanged", payload)
+      );
+    });
   
-  // //  const setUnreadMsgCounterBadge = async (unreadMsgCount) => {
-  // //     try {
-  // //       const unreadCount = Object.values(
-  // //         store.getState()?.roomsPageReducer?.unreadInboxRooms || {},
-  // //       ).reduce((a, c) => a + c, 0);
-  // const setUnreadMsgCounterBadge = async () => {
-  //   try {  
-  //       const count = 5;
-  //       // const count = unreadMsgCount ?? unreadCount;
-        
-  //       if (isNaN(count) || count < 0) {
-  //         console.error("Invalid count value:", count);
-  //         return;
-  //       }
-    
-  //       if ("serviceWorker" in navigator) {
-  //         return navigator?.serviceWorker?.controller?.postMessage({
-  //           type: "set_unread_message_counter",
-  //           unreadCount: count,
-  //         });
-  //       }
-    
-  //       const webexSidebar = await webexApplication.context.getSidebar();
-  //       console.log(webexSidebar);
-    
-  //       const res = await webexSidebar.showBadge({ badgeType: "count", count });
-  //       console.log(res);
-  //     } catch (e) {
-  //       console.error(
-  //         `Setting unread message badge counter failed, ${(e).message}`,
-  //       );
-  //     }
-  //   }
-  
-  //   webexApplication.onReady().then(async () => {
-  //     console.log("Webex app is ready.");
-    
+  //  const setUnreadMsgCounterBadge = async (unreadMsgCount) => {
   //     try {
-  //       // Call setUnreadMsgCounterBadge when the app is ready
-  //       await setUnreadMsgCounterBadge();
-  //     } catch (error) {
-  //       console.error("Error invoking setUnreadMsgCounterBadge:", error);
-  //     }
-  //   });
+  //       const unreadCount = Object.values(
+  //         store.getState()?.roomsPageReducer?.unreadInboxRooms || {},
+  //       ).reduce((a, c) => a + c, 0);
+  const setUnreadMsgCounterBadge = async () => {
+    try {  
+        const count = 5;
+        // const count = unreadMsgCount ?? unreadCount;
+        
+        if (isNaN(count) || count < 0) {
+          console.error("Invalid count value:", count);
+          return;
+        }
+    
+        if ("serviceWorker" in navigator) {
+          return navigator?.serviceWorker?.controller?.postMessage({
+            type: "set_unread_message_counter",
+            unreadCount: count,
+          });
+        }
+    
+        const webexSidebar = await webexApplication.context.getSidebar();
+        console.log(webexSidebar);
+    
+        const res = await webexSidebar.showBadge({ badgeType: "count", count });
+        console.log(res);
+      } catch (e) {
+        console.error(
+          `Setting unread message badge counter failed, ${(e).message}`,
+        );
+      }
+    }
   
-  // });
+    webexApplication.onReady().then(async () => {
+      console.log("Webex app is ready.");
+    
+      try {
+        // Call setUnreadMsgCounterBadge when the app is ready
+        await setUnreadMsgCounterBadge();
+      } catch (error) {
+        console.error("Error invoking setUnreadMsgCounterBadge:", error);
+      }
+    });
+  
+  });
 
 
 
