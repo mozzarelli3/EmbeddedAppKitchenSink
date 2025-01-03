@@ -1,25 +1,37 @@
-// Define setUnreadMsgCounterBadge at the top level
-const setUnreadMsgCounterBadge = async (count) => {
-  try {
-    if (isNaN(count) || count < 0) {
-      console.error("Invalid count value:", count);
-      return;
-    }
+let unreadMessagesCount = 0; // Track the count globally or in a shared state
 
-    if ("serviceWorker" in navigator) {
-      return navigator?.serviceWorker?.controller?.postMessage({
-        type: "set_unread_message_counter",
-        unreadCount: count,
-      });
-    }
+function handleNewMessage() {
+  app.context
+    .getSpace()
+    .then((space) => {
+      const simulatedMessage = {
+        id: `msg-${Date.now()}`,
+        spaceId: space.id,
+        text: "This is a test message",
+        created: new Date().toISOString(),
+      };
 
-    const webexSidebar = await app.context.getSidebar(); // Ensure `app` is initialized
-    const res = await webexSidebar.showBadge({ badgeType: "count", count });
-    console.log("Badge updated:", res);
-  } catch (e) {
-    console.error(`Setting unread message badge counter failed, ${e.message}`);
-  }
-};
+      log("New Message Event", simulatedMessage);
+
+      try {
+        // Increment the message counter
+        unreadMessagesCount += 1;
+
+        // Update the badge with the new count
+        setUnreadMsgCounterBadge(unreadMessagesCount);
+        log("Updated Message Counter", { unreadMessagesCount });
+      } catch (error) {
+        log("Error Handling New Message", { error: error.message });
+      }
+    })
+    .catch((error) => {
+      log(
+        "getSpace() promise failed with error",
+        Webex.Application.ErrorCodes[error]
+      );
+    });
+}
+
 
 // Function to handle a new message
 function handleNewMessage() {
