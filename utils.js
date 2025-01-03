@@ -78,6 +78,26 @@ function handleGetSpace() {
 }
 
 /**
+ * Handles a new mwessage event and updates the sidebar message counter
+ */
+function handleNewMessage(message) {
+  // Log the new message event
+  log("New Message Event", message);
+
+  try {
+    // Simulate updating the message counter
+    const unreadMessagesCount = (window.unreadMessagesCount || 0) + 1;
+    window.unreadMessagesCount = unreadMessagesCount;
+
+    // Update the badge with the new count
+    setUnreadMsgCounterBadge(unreadMessagesCount);
+    log("Updated Message Counter", { unreadMessagesCount });
+  } catch (error) {
+    log("Error Handling New Message", { error: error.message });
+  }
+}
+
+/**
  * Initiates the System Browser OAuth flow for SSO
  */
 function handleSystemBrowserOAuth() {
