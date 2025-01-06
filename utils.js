@@ -84,7 +84,7 @@ function handleGetSpace() {
 const setUnreadMsgCounterBadge = async () => {
   try {  
 
-      const count = unreadMsgCount ?? unreadCount;
+      const count = unreadMessagesCount ?? unreadCount;
       
       if (isNaN(count) || count < 0) {
         console.error("Invalid count value:", count);
