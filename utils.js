@@ -105,8 +105,8 @@ const setUnreadMsgCounterBadge = async () => {
       log("Debug: Badge update response", res);
     } catch (e) {
       console.error(
-        `Setting unread message badge counter failed, ${(e).message}`,
-      );
+        log("Badge Update Failed", { error: e.message })
+        );
     }
   }
 
