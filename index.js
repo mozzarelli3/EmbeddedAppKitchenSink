@@ -1,6 +1,13 @@
 app.onReady().then(async () => {
     log("onReady()", { message: "host app is ready" });
   
+    try {
+      const webexSidebar = await app.context.getSidebar();
+      log("Sidebar Initialized", webexSidebar);
+    } catch (error) {
+      log("Error Initializing Sidebar", { error: error.message });
+    }
+
     // Listen and emit any events from the EmbeddedAppSDK
     app.listen().then(() => {
       app.on("application:displayContextChanged", (payload) =>
