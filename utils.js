@@ -99,10 +99,10 @@ const setUnreadMsgCounterBadge = async () => {
       }
   
       const webexSidebar = await webexApplication.context.getSidebar();
-      console.log(webexSidebar);
+      log("Debug: Sidebar context obtained", webexSidebar);
   
       const res = await webexSidebar.showBadge({ badgeType: "count", count });
-      console.log(res);
+      log("Debug: Badge update response", res);
     } catch (e) {
       console.error(
         `Setting unread message badge counter failed, ${(e).message}`,
@@ -132,7 +132,7 @@ function handleNewMessage() {
       const spaceId = space.id; // Get the current space ID
       const simulatedMessage = {
         id: `msg-${Date.now()}`, // Simulated unique message ID
-        spaceId: "00000000-0000-0000-0000-000000000000",
+        spaceId: "00000000-0000-0000-0000-000000000000", //spaceId,
         text: "This is a test message",
         created: new Date().toISOString(),
       };
