@@ -1,3 +1,6 @@
+app.enableDebugMode();
+
+
 app.onReady().then(async () => {
     log("onReady()", { message: "host app is ready" });
   
