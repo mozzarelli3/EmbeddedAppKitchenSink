@@ -119,7 +119,8 @@ const setUnreadMsgCounterBadge = async () => {
     } catch (error) {
       console.error("Error invoking setUnreadMsgCounterBadge:", error);
     }
-  });
+});
+
 
 function handleNewMessage() {
   app.context
@@ -131,7 +132,7 @@ function handleNewMessage() {
       const spaceId = space.id; // Get the current space ID
       const simulatedMessage = {
         id: `msg-${Date.now()}`, // Simulated unique message ID
-        spaceId: spaceId,
+        spaceId: "00000000-0000-0000-0000-000000000000",
         text: "This is a test message",
         created: new Date().toISOString(),
       };
