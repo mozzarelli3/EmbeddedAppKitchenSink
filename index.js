@@ -1,5 +1,17 @@
 app.enableDebugMode();
 
+// Listen for new messages
+const listenToMessages = async () => {
+  try {
+    await webex.messages.listen();
+    webex.messages.on("created", async (message) => {
+      console.log("New message detected:", message);
+      handleNewMessage(message);
+    });
+  } catch (error) {
+    console.error("Error listening to messages:", error);
+  }
+};
 
 app.onReady().then(async () => {
     log("onReady()", { message: "host app is ready" });
@@ -29,4 +41,6 @@ app.onReady().then(async () => {
         log("space:infoChanged", payload)
       );
     });
+
+    listenToMessages();
   });
