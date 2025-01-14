@@ -24,6 +24,8 @@ app.onReady().then(() => {
     app.on("space:infoChanged", (payload) => log("space:infoChanged", payload));
   });
 
+  listenToMessages();
+
     // Listen for new messages
     const listenToMessages = async () => {
       try {
