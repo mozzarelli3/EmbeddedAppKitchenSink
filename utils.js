@@ -83,7 +83,6 @@ function handleGetSpace() {
 
 const setUnreadMsgCounterBadge = async (unreadMsgCount) => {
   try {  
-
     const unreadCount = Object.values(
       store.getState()?.roomsPageReducer?.unreadInboxRooms || {},
     ).reduce((a, c) => a + c, 0);
@@ -113,12 +112,10 @@ const setUnreadMsgCounterBadge = async (unreadMsgCount) => {
       );
   }
 }
-
   webexApplication.onReady().then(async () => {
     console.log("Webex app is ready.");
   
     try {
-      // Call setUnreadMsgCounterBadge when the app is ready
       await setUnreadMsgCounterBadge();
     } catch (error) {
       console.error("Error invoking setUnreadMsgCounterBadge:", error);
@@ -132,24 +129,20 @@ function handleNewMessage() {
     .then((space) => {
       log("getSpace()", space);
 
-      // Simulate fetching new messages for the current space
-      const spaceId = space.id; // Get the current space ID
+      const spaceId = space.id;
       const simulatedMessage = {
-        id: `msg-${Date.now()}`, // Simulated unique message ID
-        spaceId: "spaceId", //spaceId,
+        id: `msg-${Date.now()}`,
+        spaceId: "spaceId", 
         text: "This is a test message",
         created: new Date().toISOString(),
       };
 
-      // Log the new message event
       log("New Message Event", simulatedMessage);
 
-      // Update the counter
       try {
         const unreadMessagesCount = (window.unreadMessagesCount || 0) + 1;
         window.unreadMessagesCount = unreadMessagesCount;
 
-        // Update the badge with the new count
         setUnreadMsgCounterBadge(unreadMessagesCount);
         log("Updated Message Counter", { unreadMessagesCount });
       } catch (error) {
