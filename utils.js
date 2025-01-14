@@ -132,7 +132,7 @@ function handleNewMessage() {
       const spaceId = space.id; // Get the current space ID
       const simulatedMessage = {
         id: `msg-${Date.now()}`, // Simulated unique message ID
-        spaceId: "00000000-0000-0000-0000-000000000000", //spaceId,
+        spaceId: "18e42ec0-bc8e-11ef-ae1f-35c5f6ddd3ae", //spaceId,
         text: "This is a test message",
         created: new Date().toISOString(),
       };
