@@ -81,34 +81,38 @@ function handleGetSpace() {
  * Handles a new message event and updates the sidebar message counter
  */
 
-const setUnreadMsgCounterBadge = async () => {
+const setUnreadMsgCounterBadge = async (unreadMsgCount) => {
   try {  
 
-      const count = unreadMessagesCount ?? unreadCount;
+    const unreadCount = Object.values(
+      store.getState()?.roomsPageReducer?.unreadInboxRooms || {},
+    ).reduce((a, c) => a + c, 0);
+
+    const count = unreadMessagesCount ?? unreadCount;
       
-      if (isNaN(count) || count < 0) {
-        console.error("Invalid count value:", count);
-        return;
-      }
-  
-      if ("serviceWorker" in navigator) {
-        return navigator?.serviceWorker?.controller?.postMessage({
-          type: "set_unread_message_counter",
-          unreadCount: count,
-        });
-      }
-  
-      const webexSidebar = await webexApplication.context.getSidebar();
-      log("Debug: Sidebar context obtained", webexSidebar);
-  
-      const res = await webexSidebar.showBadge({ badgeType: "count", count });
-      log("Debug: Badge update response", res);
-    } catch (e) {
-      console.error(
-        log("Badge Update Failed", { error: e.message })
-        );
+    if (isNaN(count) || count < 0) {
+      console.error("Invalid count value:", count);
+      return;
     }
+  
+    if ("serviceWorker" in navigator) {
+      return navigator?.serviceWorker?.controller?.postMessage({
+        type: "set_unread_message_counter",
+        unreadCount: count,
+      });
+    }
+  
+    const webexSidebar = await webexApplication.context.getSidebar();
+    log("Debug: Sidebar context obtained", webexSidebar);
+  
+    const res = await webexSidebar.showBadge({ badgeType: "count", count });
+    log("Debug: Badge update response", res);
+  } catch (e) {
+    console.error(
+      log("Badge Update Failed", { error: e.message })
+      );
   }
+}
 
   webexApplication.onReady().then(async () => {
     console.log("Webex app is ready.");
@@ -132,7 +136,7 @@ function handleNewMessage() {
       const spaceId = space.id; // Get the current space ID
       const simulatedMessage = {
         id: `msg-${Date.now()}`, // Simulated unique message ID
-        spaceId: "18e42ec0-bc8e-11ef-ae1f-35c5f6ddd3ae", //spaceId,
+        spaceId: "spaceId", //spaceId,
         text: "This is a test message",
         created: new Date().toISOString(),
       };
